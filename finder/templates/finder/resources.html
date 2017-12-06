@@ -1,0 +1,74 @@
+{% extends "finder/base.html" %}
+
+{% block title %}{{ resources.name }} details - MAGUS{% endblock %}
+
+{% block content %}
+    <h1>
+        {{ resources.name }} resources details
+        <a href="{% url 'finder:delete_resources' resources.pk%}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+    </h1>
+
+    <div class="col-md-6">
+        <h2>Name: {{resources.name}} </h2>
+        <h2>Date in: {{ resources.date_in}} </h2>
+        <h2>Date out: {%if resources.date_out != None %} {{ resources.date_out}} {%else%} Still in the company {%endif%}</h2>
+    </div>
+
+    <div class="col-md-6">
+        <h2>Assigne to</h2>
+        {%if resources.userresources_set.all.count > 0 %}
+            {%for uR in resources.userresources_set.all %}
+                {{uR.user.username}}
+                    <a href="{% url 'finder:delete_user_resources' uR.pk%}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+            {% endfor %}
+        {%else%}
+        <br>
+        <form method="post" action="{% url 'finder:add_user_resources' resources.pk%}">
+            {% csrf_token %}
+            <select name="user_id" class="form-control">
+            {% for user in users %}
+            <option value="{{user.pk}}">{{user.username}}</option>
+            {%endfor%}
+            </select>
+            <br>
+            <button type="submit" class="btn btn-success">Assigne</button>
+        </form>
+        {%endif%}
+    </div>
+
+    <div class="col-md-12">
+    <ul>
+        {%for rP in resources.resourcesproper_set.all%}
+        <li>
+            {{rP.key}}:
+            {{rP.value}}
+            <a href="{% url 'finder:delete_resources_proper' rP.pk %}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+        </li>
+
+        {% endfor %}
+    </ul>
+
+    <div id="new_resources_container" hidden>
+        <div class="col-md-4">
+            <form method="post" action="{% url 'finder:add_resources_proper' resources.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="key">Key</label>
+                    <input type="text" class="form-control" name="key" id="key">
+                </div>
+
+                <div class="form-group">
+                    <label for="value">Value</label>
+                    <input type="text" class="form-control" name="value" id="value">
+                </div>
+
+                <button class="btn btn-success" id="add_proper">Add</button>
+            </form>
+
+        </div>
+    </div>
+
+    <br>
+    <button class="btn btn-default" id="add_resources_proper">Add proper</button>
+    </div>
+{% endblock %}

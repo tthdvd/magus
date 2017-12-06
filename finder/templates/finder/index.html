@@ -1,0 +1,16 @@
+{% extends "finder/base.html" %}
+
+{% block title %}Magus{% endblock %}
+
+{% block content %}
+    <h1>Welcome, feel free for search</h1>
+
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search" id="search">
+        <br>
+                    <div id="results_count"></div>
+
+        <div id="results" class="list-group">
+        </div>
+    </div>
+{% endblock %}

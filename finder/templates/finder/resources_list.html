@@ -1,0 +1,11 @@
+{% extends "finder/base.html" %}
+
+{% block title %}Resources List - MAGUS{% endblock %}
+
+{% block content %}
+    <div class="list-group">
+    {% for r in resources %}
+      <a class="list-group-item" href="{% url 'finder:resources_details' r.pk %}">{{r.name}}</a>
+    {% endfor %}
+    </div>
+{% endblock %}
